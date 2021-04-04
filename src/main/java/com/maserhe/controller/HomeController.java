@@ -54,10 +54,8 @@ public class HomeController {
     public String getIndexPage(Model model, Page page) {
         page.setRows(discussPostService.findDiscussPostRows(0));
         page.setPath("/index.html");
-
         // 查询数据, 首页显示 10条数据
         List<DiscussPost> list = discussPostService.findDiscussPosts(0, page.getOffset(), page.getLimit());
-
         List<Map<String, Object>> discussPosts = new ArrayList<>();
 
         if (list != null) {
@@ -68,6 +66,7 @@ public class HomeController {
                 discussPosts.add(map);
             }
         }
+
         // 将数据放入上下文。
         model.addAttribute("discussPosts", discussPosts);
         // 这里不需要 将 page 放入Model中

@@ -24,7 +24,7 @@ import java.util.Map;
  * @create 2021-04-02 14:44
  */
 @Service
-public class UserService {
+public class UserService implements UserStatus{
 
     @Autowired
     private UserMapper userMapper;
@@ -63,6 +63,18 @@ public class UserService {
      * @return
      */
     public User findUserByEmail(String email) {return userMapper.selectByEmail(email);};
+
+    /**
+     * 更新用户的Status 通过userid
+     * @param userId
+     * @param status
+     * @return
+     */
+    public int updateUserStatus(int userId, int status) {
+        return userMapper.updateStatus(userId, status);
+    }
+
+
     /**
      * 注册用户
      * @param user
@@ -125,7 +137,7 @@ public class UserService {
      * @param expiredSeconds
      * @return
      */
-    public Map<String, Object> loginUser(String username, String password, int expiredSeconds) {
+    public Map<String, Object> loginUser(String username, String password, long expiredSeconds) {
         Map<String, Object> map = new HashMap<>();
         // 空值处理
         if (StringUtils.isEmpty(username)) { map.put("usernameMsg", "账号不能为空"); return map;}
@@ -136,7 +148,7 @@ public class UserService {
             map.put("usernameMsg", "账号不存在");
             return map;
         }
-        if (user.getStatus() == UserStatus.NO_ACTIVATION.getStatus()) {
+        if (user.getStatus() == NO_ACTIVATION) {
             map.put("usernameMsg", "账号未激活");
         }
         // 验证密码, 通过 密码加上一段 盐。
@@ -146,11 +158,13 @@ public class UserService {
             return map;
         }
         // 生成登陆凭证
+
         LoginTicket ticket = new LoginTicket();
         ticket.setUserId(user.getId());
         ticket.setTicket(MD5Utils.generateUUID());
-        ticket.setExpired(new Date(System.currentTimeMillis() + expiredSeconds * 1000));
-        ticket.setStatus(TicketStatus.EFFECTIVE.getStatus());
+
+        ticket.setExpired(new Date(System.currentTimeMillis() + expiredSeconds  * 1000));
+        ticket.setStatus(TicketStatus.EFFECTIVE);
         loginTicketMapper.insertLoginTicket(ticket);
         map.put("ticket", ticket.getTicket());
         return map;

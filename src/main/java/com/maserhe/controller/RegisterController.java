@@ -1,6 +1,7 @@
 package com.maserhe.controller;
 
 import com.maserhe.entity.User;
+import com.maserhe.enums.UserStatus;
 import com.maserhe.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import java.util.Set;
  * @create 2021-04-03 18:38
  */
 @Controller
-public class RegisterController {
+public class RegisterController implements UserStatus {
 
     @Autowired
     private UserService userService;
@@ -56,17 +57,19 @@ public class RegisterController {
      * @param activeCode
      * @return
      */
-    @GetMapping("/activeAccout/{username}/{activeCode}")
+    @GetMapping("/activeAccount/{username}/{activeCode}")
     public String activeAccount(@PathVariable String username, @PathVariable String activeCode) {
 
         // 检查用户名
         if (StringUtils.isBlank(username) || StringUtils.isBlank(activeCode)) return "/site/register";
         // 查询用户
+        User user = userService.findUserByName(username);
+        if (user == null) return "/site/register";
+        // 验证激活码
+        if (!user.getActivationCode().equals(activeCode)) return "/site/register";
 
-        //
-
-
-
+        // 开始激活用户
+        userService.updateUserStatus(user.getId(), ACTIVATION);
         return "/site/operate-result";
     }
 }

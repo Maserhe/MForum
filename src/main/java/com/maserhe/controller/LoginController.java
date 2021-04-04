@@ -37,18 +37,20 @@ public class LoginController implements LoginParam {
             model.addAttribute("codeMsg", "验证码不正确");
             return "/site/login";
         }
-        int expiredSeconds = rememberMe ? REMEMBER_EXPIRED_SECONDS: DEFAULT_EXPIRED_SECONDS;
+
+        long expiredSeconds = rememberMe ? REMEMBER_EXPIRED_SECONDS: DEFAULT_EXPIRED_SECONDS;
+
         Map<String, Object> map = userService.loginUser(username, password, expiredSeconds);
         if (map.containsKey("ticket")) {
             Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
             cookie.setPath(contextPath);
-            cookie.setMaxAge(expiredSeconds);
+            cookie.setMaxAge((int) expiredSeconds);
             response.addCookie(cookie);
             return "redirect:/index.html";
         }
 
         model.addAllAttributes(map);
-        return "/site/login";
+        return "/site/login.html";
     }
 
 }

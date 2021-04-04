@@ -32,4 +32,9 @@
         where ticket = #{ticket}
     </update>
 
+    <update id="updateDateAndStatus">
+        update login_ticket set status = #{status}, expired = #{expired}
+        where ticket = #{ticket}
+    </update>
+
 </mapper>

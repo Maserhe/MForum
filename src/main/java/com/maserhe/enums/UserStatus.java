@@ -6,19 +6,17 @@ package com.maserhe.enums;
  * @author Maserhe
  * @create 2021-04-03 16:19
  */
-public enum UserStatus {
+public interface UserStatus {
 
+    /**
+     * 未激活状态
+     */
+    int NO_ACTIVATION = 0;
 
-    NO_ACTIVATION(0),
-    ACTIVATION(1);
-    private final Integer status;
+    /**
+     * 激活状态
+     */
+    int ACTIVATION = 1;
 
-    UserStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
 
 }

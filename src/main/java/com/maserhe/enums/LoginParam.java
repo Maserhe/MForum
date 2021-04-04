@@ -26,12 +26,12 @@ public interface LoginParam {
     /**
      * 默认状态下 的 凭证超时时间
      */
-    int DEFAULT_EXPIRED_SECONDS = 3600 * 12;
+    long DEFAULT_EXPIRED_SECONDS = 3600 * 12;
 
     /**
      * 记住我状态下 的 超时时间
      */
-    int REMEMBER_EXPIRED_SECONDS = 3600 * 24 * 30;
+    long REMEMBER_EXPIRED_SECONDS = 3600 * 24 * 30;
 
 
 }
