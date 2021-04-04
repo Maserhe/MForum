@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.maserhe.mapper.LoginTicketMapper">
+
+    <sql id="selectFields">
+        id, user_id, ticket, status, expired
+    </sql>
+
+
+    <!--使用了主键自增，这里不用写 id-->
+    <sql id="insertFields">
+        user_id, ticket, status, expired
+    </sql>
+    <!--查询 sql-->
+    <select id="selectTicket" resultType="loginTicket">
+        select <include refid="selectFields"></include>
+        from login_ticket
+        where ticket = #{ticket}
+    </select>
+
+    <!--insert语句-->
+    <insert id="insertLoginTicket">
+        insert into login_ticket (<include refid="insertFields"></include>)
+        values (#{userId}, #{ticket}, #{status}, #{expired})
+    </insert>
+
+    <!--update语句-->
+    <update id="updateStatus">
+        update login_ticket set status = #{status}
+        where ticket = #{ticket}
+    </update>
+
+</mapper>

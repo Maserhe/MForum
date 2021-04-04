@@ -1,0 +1,158 @@
+package com.maserhe.service;
+
+import com.maserhe.entity.LoginTicket;
+import com.maserhe.entity.User;
+import com.maserhe.enums.TicketStatus;
+import com.maserhe.enums.UserStatus;
+import com.maserhe.mapper.LoginTicketMapper;
+import com.maserhe.mapper.UserMapper;
+import com.maserhe.util.MD5Utils;
+import com.maserhe.util.MailClient;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * 描述:
+ *
+ * @author Maserhe
+ * @create 2021-04-02 14:44
+ */
+@Service
+public class UserService {
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private LoginTicketMapper loginTicketMapper;
+
+    @Value("${server.servlet.context-path}")
+    private String contentPath;
+
+    @Value("${domain}")
+    private String domain;
+
+    @Autowired
+    private MailClient client;
+
+    /**
+     * 查询用户 通过id
+     * @param userId
+     * @return
+     */
+    public User findUserById(int userId) {
+        return userMapper.selectById(userId);
+    }
+
+    /**
+     * 查询用户 通过username
+     * @param username
+     * @return
+     */
+    public User findUserByName(String username) {return userMapper.selectByName(username);};
+
+    /**
+     * 查询用户 通过邮箱
+     * @param email
+     * @return
+     */
+    public User findUserByEmail(String email) {return userMapper.selectByEmail(email);};
+    /**
+     * 注册用户
+     * @param user
+     * @return
+     */
+    public Map<String, Object> registerUser(User user) {
+        // 查询用户信息是否合法
+        Map<String, Object> map = new HashMap<>();
+        if (StringUtils.isBlank(user.getUsername())) {
+            map.put("usernameMsg", "用户名不能为空");
+            return map;
+        }
+        if (StringUtils.isBlank(user.getPassword())) {
+            map.put("passwordMsg", "密码不能为空");
+            return map;
+        }
+        if (StringUtils.isBlank(user.getEmail())) {
+            map.put("emailMsg", "邮箱不能位空");
+            return map;
+        }
+
+        // 查询用户是否存在
+        User selectUser = userMapper.selectByName(user.getUsername());
+        if (selectUser != null) {
+            map.put("usernameMsg", "用户已经存在");
+            return map;
+        }
+        selectUser = userMapper.selectByEmail(user.getEmail());
+        if (selectUser != null) {
+            map.put("emailMsg", "邮箱已经被注册了");
+            return map;
+        }
+
+        // 可以创建用户了。
+        // 随机生成 5位 字符串。作为salt
+        String salt = MD5Utils.generateUUID().substring(0, 5);
+        user.setSalt(salt);
+        // 设置相应的密码, 通过明文密码 + salt 通过md5
+        user.setPassword(MD5Utils.md5(user.getPassword() + salt));
+        user.setStatus(0);
+        user.setType(0);
+        user.setHeaderUrl("http://images.nowcoder.com/head/21t.png");
+        user.setCreateTime(new Date());
+        user.setActivationCode(MD5Utils.generateUUID().substring(0, 20));
+        userMapper.insertUser(user);
+        // 设置激活邮件
+        // 配置激活链接 http://domain/contentPath/activeAccount/username/activation_code
+        String url = "http://" + domain + contentPath + "/activeAccount/" + user.getUsername() + "/" + user.getActivationCode();
+        map.put("url", url);
+
+        // 发送邮件 String to, String username, String subject, String url
+        client.sendMailToActive(user.getEmail(), user.getUsername(), "激活邮件", url);
+        return map;
+
+    }
+    /**
+     * 用户名， 密码， 凭证有效时间
+     * @param username
+     * @param password
+     * @param expiredSeconds
+     * @return
+     */
+    public Map<String, Object> loginUser(String username, String password, int expiredSeconds) {
+        Map<String, Object> map = new HashMap<>();
+        // 空值处理
+        if (StringUtils.isEmpty(username)) { map.put("usernameMsg", "账号不能为空"); return map;}
+        if (StringUtils.isEmpty(password)) { map.put("passwordMsg", "密码不能为空"); return map;}
+        // 验证账号
+        User user = userMapper.selectByName(username);
+        if (user == null) {
+            map.put("usernameMsg", "账号不存在");
+            return map;
+        }
+        if (user.getStatus() == UserStatus.NO_ACTIVATION.getStatus()) {
+            map.put("usernameMsg", "账号未激活");
+        }
+        // 验证密码, 通过 密码加上一段 盐。
+        password = MD5Utils.md5(password + user.getSalt());
+        if (! user.getPassword().equals(password)) {
+            map.put("passwordMsg", "密码错误");
+            return map;
+        }
+        // 生成登陆凭证
+        LoginTicket ticket = new LoginTicket();
+        ticket.setUserId(user.getId());
+        ticket.setTicket(MD5Utils.generateUUID());
+        ticket.setExpired(new Date(System.currentTimeMillis() + expiredSeconds * 1000));
+        ticket.setStatus(TicketStatus.EFFECTIVE.getStatus());
+        loginTicketMapper.insertLoginTicket(ticket);
+        map.put("ticket", ticket.getTicket());
+        return map;
+    }
+}

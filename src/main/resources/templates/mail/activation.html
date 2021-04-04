@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"
+	   xmlns="http://www.w3.org/1999/xhtml"
+	   xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
+	<title>${username}-激活账号</title>
+</head>
+<body>
+	<div>
+		<p>
+			<b th:text="${username}">用户名</b>, 您好!
+		</p>
+		请确认你的邮箱地址
+		<p>
+			<b th:text="${email}">xxxx@xx.com</b>
+		</p>
+		<p>
+			您正在注册M论坛, 这是一封激活邮件, 请点击
+			<a th:href="${url}">此链接</a>,
+			激活您的M账号!
+		</p>
+	</div>
+</body>
+</html>
