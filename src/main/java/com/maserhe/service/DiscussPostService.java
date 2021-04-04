@@ -26,4 +26,13 @@ public class DiscussPostService {
     public int findDiscussPostRows(int userId) {
         return discussPostMapper.getDiscussPostRows(userId);
     }
+
+    /**
+     * 查询帖子 通过id
+     * @param id
+     * @return
+     */
+    public DiscussPost findDiscussPostById(int id) {
+        return discussPostMapper.selectDiscussPostById(id);
+    }
 }

@@ -37,6 +37,8 @@ public class UserService implements UserStatus{
 
     @Value("${domain}")
     private String domain;
+    @Value("${server.port}")
+    private String port;
 
     @Autowired
     private MailClient client;
@@ -122,7 +124,7 @@ public class UserService implements UserStatus{
         userMapper.insertUser(user);
         // 设置激活邮件
         // 配置激活链接 http://domain/contentPath/activeAccount/username/activation_code
-        String url = "http://" + domain + contentPath + "/activeAccount/" + user.getUsername() + "/" + user.getActivationCode();
+        String url = "http://" + domain + ":"+ port + contentPath + "/activeAccount/" + user.getUsername() + "/" + user.getActivationCode();
         map.put("url", url);
 
         // 发送邮件 String to, String username, String subject, String url

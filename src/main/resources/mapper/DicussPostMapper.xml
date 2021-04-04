@@ -5,12 +5,12 @@
 <mapper namespace="com.maserhe.mapper.DiscussPostMapper">
 
     <sql id="selectFields">
-        id, user_id, title, content, type, status, create_time, comment_count, score
+        id, user_id, title, content, type, status, create_time, comment_count, score, image_url
     </sql>
 
     <!--使用了主键自增，这里不用写 id-->
     <sql id="insertFields">
-        user_id, title, content, type, status, create_time, comment_count, score
+        user_id, title, content, type, status, create_time, comment_count, score, image_url
     </sql>
     <!--查询 sql-->
 
@@ -35,7 +35,10 @@
 
     </select>
 
-
-
+    <select id="selectDiscussPostById" resultType="discusspost">
+        select <include refid="selectFields"></include>
+        from discuss_post
+        where id = #{id}
+    </select>
 
 </mapper>

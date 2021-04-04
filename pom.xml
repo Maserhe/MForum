@@ -81,6 +81,14 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
+        <!--引入fastDFS-->
+        <dependency>
+            <groupId>com.github.tobato</groupId>
+            <artifactId>fastdfs-client</artifactId>
+            <version>1.27.2</version>
+        </dependency>
+
+
     </dependencies>
 
 

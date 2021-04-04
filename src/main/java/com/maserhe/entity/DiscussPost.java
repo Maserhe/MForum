@@ -1,9 +1,5 @@
 package com.maserhe.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.Date;
 
 /**
@@ -28,6 +24,15 @@ public class DiscussPost {
      */
     private int count;
     private double score;
+    private String imageUrl;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public int getId() {
         return id;
@@ -101,7 +106,7 @@ public class DiscussPost {
         this.score = score;
     }
 
-    public DiscussPost(int id, String userId, String title, String content, int type, int status, Date createTime, int count, double score) {
+    public DiscussPost(int id, String userId, String title, String content, int type, int status, Date createTime, int count, double score, String imageUrl) {
         this.id = id;
         this.userId = userId;
         this.title = title;
@@ -111,6 +116,7 @@ public class DiscussPost {
         this.createTime = createTime;
         this.count = count;
         this.score = score;
+        this.imageUrl = imageUrl;
     }
 
     @Override
@@ -125,6 +131,7 @@ public class DiscussPost {
                 ", createTime=" + createTime +
                 ", count=" + count +
                 ", score=" + score +
+                ", imageUrl='" + imageUrl + '\'' +
                 '}';
     }
 }
