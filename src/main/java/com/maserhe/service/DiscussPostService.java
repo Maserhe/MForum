@@ -35,4 +35,13 @@ public class DiscussPostService {
     public DiscussPost findDiscussPostById(int id) {
         return discussPostMapper.selectDiscussPostById(id);
     }
+
+    /**
+     *  增加帖子
+     * @param post
+     * @return
+     */
+    public int addDiscussPost(DiscussPost post) {
+        return discussPostMapper.insertDiscussPost(post);
+    }
 }

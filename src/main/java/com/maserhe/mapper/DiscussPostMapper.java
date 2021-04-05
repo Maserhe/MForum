@@ -31,4 +31,5 @@ public interface DiscussPostMapper {
 
     DiscussPost selectDiscussPostById(@Param("id") int id);
 
+    int insertDiscussPost(DiscussPost discussPost);
 }

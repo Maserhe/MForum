@@ -41,4 +41,9 @@
         where id = #{id}
     </select>
 
+    <insert id="insertDiscussPost">
+        insert into discuss_post (<include refid="insertFields"></include>)
+        values (#{userId}, #{title}, #{content}, #{type}, #{status}, #{createTime}, #{commentCount}, #{score}, #{imageUrl})
+    </insert>
+
 </mapper>

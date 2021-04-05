@@ -2,6 +2,7 @@ package com.maserhe.controller;
 
 import com.maserhe.entity.DiscussPost;
 import com.maserhe.entity.Page;
+import com.maserhe.entity.User;
 import com.maserhe.service.DiscussPostService;
 import com.maserhe.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,16 +62,19 @@ public class HomeController {
         if (list != null) {
             for (DiscussPost post: list) {
                 Map<String, Object> map = new HashMap<>();
-                map.put("user", userService.findUserById(Integer.valueOf(post.getUserId())));
-                map.put("post", post);
-                discussPosts.add(map);
+                User user = userService.findUserById(Integer.valueOf(post.getUserId()));
+                System.out.println(user == null);
+                if (user != null ) {
+                    map.put("user", user);
+                    map.put("post", post);
+                    discussPosts.add(map);
+                }
             }
         }
-
         // 将数据放入上下文。
         model.addAttribute("discussPosts", discussPosts);
         // 这里不需要 将 page 放入Model中
-        return "/index";
+        return "index";
     }
 
 }
