@@ -23,6 +23,11 @@ public class DiscussPostService {
         return discussPostMapper.getAllDiscussPost(userId, offset, limit);
     }
 
+    /**
+     * 统计用户发的 帖子数量
+     * @param userId
+     * @return
+     */
     public int findDiscussPostRows(int userId) {
         return discussPostMapper.getDiscussPostRows(userId);
     }

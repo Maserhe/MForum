@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.maserhe.mapper.CommentMapper">
+
+    <sql id="selectFields">
+        id, user_id, entity_id, target_id, content, status, create_time, star
+    </sql>
+
+    <!--使用了主键自增，这里不用写 id-->
+    <sql id="insertFields">
+        user_id, entity_id, target_id, content, status, create_time, star
+    </sql>
+
+    <!--查询 sql-->
+    <select id="selectCommentsById" resultType="Comment">
+        select <include refid="selectFields"></include>
+        from comment
+        where entity_id = #{entityId}
+        order by create_time desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="selectCountByEntity" resultType="int">
+        select count(id)
+        from comment
+        where entity_id = #{entityId}
+    </select>
+
+    <select id="selectCommentStatus" resultType="int">
+        select count(id)
+        from comment
+        where entity_id = #{entityId}
+        and user_id = #{userId}
+        and status = 1
+    </select>
+    
+    <insert id="addComment">
+        insert into comment
+        (<include refid="insertFields"></include>)
+        values (#{userId}, #{entityId}, #{targetId}, #{content}, #{status}, #{createTime}, #{star})
+    </insert>
+
+</mapper>

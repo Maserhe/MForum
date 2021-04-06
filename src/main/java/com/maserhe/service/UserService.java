@@ -9,9 +9,13 @@ import com.maserhe.mapper.UserMapper;
 import com.maserhe.util.MD5Utils;
 import com.maserhe.util.MailClient;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.cache.TransactionalCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -170,5 +174,15 @@ public class UserService implements UserStatus{
         loginTicketMapper.insertLoginTicket(ticket);
         map.put("ticket", ticket.getTicket());
         return map;
+    }
+
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     */
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
+    public int addUser(User user) {
+        return userMapper.insertUser(user);
     }
 }
