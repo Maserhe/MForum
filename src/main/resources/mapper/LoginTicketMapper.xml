@@ -20,6 +20,11 @@
         where ticket = #{ticket}
     </select>
 
+    <select id="selectAllTicket" resultType="loginTicket">
+        select <include refid="selectFields"></include>
+        from login_ticket;
+    </select>
+
     <!--insert语句-->
     <insert id="insertLoginTicket">
         insert into login_ticket (<include refid="insertFields"></include>)
@@ -36,5 +41,7 @@
         update login_ticket set status = #{status}, expired = #{expired}
         where ticket = #{ticket}
     </update>
+
+
 
 </mapper>

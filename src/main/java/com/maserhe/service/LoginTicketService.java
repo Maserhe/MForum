@@ -1,12 +1,13 @@
 package com.maserhe.service;
 
 import com.maserhe.entity.LoginTicket;
-import com.maserhe.enums.TicketStatus;
 import com.maserhe.mapper.LoginTicketMapper;
+import org.apache.catalina.LifecycleState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 描述:
@@ -59,5 +60,9 @@ public class LoginTicketService {
      */
     public int updateStatusAndExpired(String ticket, int status, Date expired) {
         return loginTicketMapper.updateDateAndStatus(ticket, status, expired);
+    }
+
+    public List<LoginTicket> findAllTicket(){
+        return loginTicketMapper.selectAllTicket();
     }
 }

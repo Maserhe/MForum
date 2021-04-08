@@ -56,7 +56,6 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (ticket != null) {
             // 检查凭证是否有效
             logger.info(ticket + "用户凭证");
-
             LoginTicket loginTicket = loginTicketService.findTicket(ticket);
             if (loginTicket.getStatus() == TicketStatus.EFFECTIVE && loginTicket.getExpired().after(new Date())) {
                 User user = userService.findUserById(loginTicket.getUserId());
@@ -64,6 +63,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                 logger.info(user + "登陆成功");
             }
         }
+
         return true;
     }
 

@@ -4,6 +4,7 @@ import com.maserhe.entity.LoginTicket;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 描述:
@@ -19,4 +20,6 @@ public interface LoginTicketMapper {
     LoginTicket selectTicket(String ticket);
     int updateStatus(String ticket, int status);
     int updateDateAndStatus(String ticket, int status, Date expired);
+    List<LoginTicket> selectAllTicket();
+
 }
