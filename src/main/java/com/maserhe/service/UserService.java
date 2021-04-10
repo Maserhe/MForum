@@ -4,14 +4,14 @@ import com.maserhe.entity.LoginTicket;
 import com.maserhe.entity.User;
 import com.maserhe.enums.TicketStatus;
 import com.maserhe.enums.UserStatus;
-import com.maserhe.mapper.LoginTicketMapper;
 import com.maserhe.mapper.UserMapper;
 import com.maserhe.util.MD5Utils;
 import com.maserhe.util.MailClient;
+import com.maserhe.util.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.cache.TransactionalCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 描述:
@@ -33,8 +34,8 @@ public class UserService implements UserStatus{
     @Autowired
     private UserMapper userMapper;
 
-    @Autowired
-    private LoginTicketMapper loginTicketMapper;
+    // @Autowired
+    // private LoginTicketMapper loginTicketMapper;
 
     @Value("${server.servlet.context-path}")
     private String contentPath;
@@ -47,13 +48,20 @@ public class UserService implements UserStatus{
     @Autowired
     private MailClient client;
 
+    @Autowired
+    private RedisTemplate template;
+
     /**
-     * 查询用户 通过id
+     * 查询用户 通过id 使用 cache 重构
      * @param userId
      * @return
      */
     public User findUserById(int userId) {
-        return userMapper.selectById(userId);
+        User user = getCache(userId);
+        if (user == null) {
+            user = initCache(userId);
+        }
+        return user;
     }
 
     /**
@@ -77,6 +85,8 @@ public class UserService implements UserStatus{
      * @return
      */
     public int updateUserStatus(int userId, int status) {
+        // 清理缓存
+        delCache(userId);
         return userMapper.updateStatus(userId, status);
     }
 
@@ -171,7 +181,10 @@ public class UserService implements UserStatus{
 
         ticket.setExpired(new Date(System.currentTimeMillis() + expiredSeconds  * 1000));
         ticket.setStatus(TicketStatus.EFFECTIVE);
-        loginTicketMapper.insertLoginTicket(ticket);
+        // loginTicketMapper.insertLoginTicket(ticket);
+
+        template.opsForValue().set(RedisUtil.getTicketKey(ticket.getTicket()), ticket);
+
         map.put("ticket", ticket.getTicket());
         return map;
     }
@@ -184,5 +197,36 @@ public class UserService implements UserStatus{
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
     public int addUser(User user) {
         return userMapper.insertUser(user);
+    }
+
+    /**
+     * 优先从缓存中获取 用户
+     * @param userId
+     * @return
+     */
+    public User getCache(int userId) {
+        String key = RedisUtil.getUserKey(userId);
+        return (User) template.opsForValue().get(key);
+    }
+
+    /**
+     * 取不到值缓存数据
+     * @param userId
+     * @return
+     */
+    public User initCache(int userId) {
+        User user = userMapper.selectById(userId);
+        String redisKey = RedisUtil.getUserKey(userId);
+        template.opsForValue().set(redisKey, user, 3600, TimeUnit.SECONDS);
+        return user;
+    }
+
+    /**
+     * 数据变更时 删除缓存
+     * @param userid
+     */
+    public void delCache(int userid) {
+        String userKey = RedisUtil.getUserKey(userid);
+        template.delete(userKey);
     }
 }

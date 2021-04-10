@@ -14,4 +14,12 @@ springboot + mybatis + thymeleaf + BootStrap + Es + fastDFS + redis
 - 统一日志处理
 - 点赞功能  
 - 管理员功能 开发中 。。。
+- redis优化
+    - redis存储验证码 (原先存在Session中)
+    - redis存登陆凭证 (原先直接查数据库)
+    - redis存缓存信息 
+- 缓存
+  - 优先从缓存中取值
+  - 取不到值时初始化缓存
+  - 数据变更时,清除去缓存
 。。。。

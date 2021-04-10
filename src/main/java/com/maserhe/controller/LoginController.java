@@ -2,11 +2,15 @@ package com.maserhe.controller;
 
 import com.maserhe.enums.LoginParam;
 import com.maserhe.service.UserService;
+import com.maserhe.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.BoundValueOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.Cookie;
@@ -29,10 +33,18 @@ public class LoginController implements LoginParam {
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
+    @Autowired
+    private RedisTemplate template;
+
     @PostMapping("/login")
-    public String login(Model model, String username, String password, String code, boolean rememberMe, HttpSession session, HttpServletResponse response) {
-        // 首先判断验证码，
-        String text = (String) session.getAttribute("kaptcha");
+    public String login(Model model, String username, String password, String code, boolean rememberMe, HttpServletResponse response, @CookieValue("kaptcha") String owner) {
+        // 首先获取 cookie中随机的
+        if (StringUtils.isEmpty(owner)) {
+            return "/site/login";
+        }
+        // 获取Redis 获取key,然后获取验证码。
+        String key = RedisUtil.getKaptchaKey(owner);
+        String text = (String) template.opsForValue().get(key);
         if (StringUtils.isEmpty(text) || StringUtils.isEmpty(code) || !text.equalsIgnoreCase(code)) {
             model.addAttribute("codeMsg", "验证码不正确");
             return "/site/login";
