@@ -1,8 +1,10 @@
 package com.maserhe.controller;
 
+import com.maserhe.entity.Comment;
 import com.maserhe.entity.DiscussPost;
 import com.maserhe.entity.Page;
 import com.maserhe.entity.User;
+import com.maserhe.service.CommentService;
 import com.maserhe.service.DiscussPostService;
 import com.maserhe.service.RedisService;
 import com.maserhe.service.UserService;
@@ -36,6 +38,9 @@ public class HomeController {
     @Autowired
     private RedisService redisService;
 
+    @Autowired
+    private CommentService commentService;
+
     /**
      * 起始页面的跳转。
      * @return
@@ -68,11 +73,12 @@ public class HomeController {
                 Map<String, Object> map = new HashMap<>();
                 User user = userService.findUserById(Integer.valueOf(post.getUserId()));
                 long count = redisService.count(post.getId());
-                System.out.println(user == null);
+                int commentsCount = commentService.findCommentsCount(post.getId());
                 if (user != null ) {
                     map.put("user", user);
                     map.put("post", post);
                     map.put("count", count);
+                    map.put("commentsCount", commentsCount);
                     discussPosts.add(map);
                 }
             }

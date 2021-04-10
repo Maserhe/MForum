@@ -116,7 +116,6 @@
 						</div>
 					</div>
 				</div>
-
 				
 				<!-- 帖子列表 -->
 				<ul class="list-unstyled">
@@ -138,7 +137,9 @@
 										<a th:text="${map.count}">0</a>
 									</li>
 									<li class="d-inline ml-2">|</li>
-									<li class="d-inline ml-2">回帖 7</li>
+									<li class="d-inline ml-2">回帖
+										<a th:text="${map.commentsCount}">0</a>
+									</li>
 								</ul>
 							</div>
 
