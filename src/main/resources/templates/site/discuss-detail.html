@@ -9,7 +9,6 @@
 </head>
 <body>
 
-
 	<div class="nk-container">
 		<!-- 头部 -->
 		<header class="bg-dark sticky-top" th:replace="index::header">
@@ -46,7 +45,7 @@
 									<a class="dropdown-item text-center" href="/user/setting">账号设置</a>
 									<a class="dropdown-item text-center" href="logout">退出登录</a>
 									<div class="dropdown-divider"></div>
-									<span class="dropdown-item text-center text-secondary" utext="loginUser.username">nowcoder</span>
+									<span class="dropdown-item text-center text-secondary" utext="loginUser.username">Maserhe</span>
 								</div>
 							</li>
 						</ul>
@@ -85,8 +84,11 @@
 						<div class="text-muted mt-3">
 							发布于 <b th:text="${#dates.format(discussPost.createTime,'yyyy-MM-dd HH:mm:ss')}">2021-04-15 15:32:18</b>
 							<ul class="d-inline float-right">
-								<li class="d-inline ml-2">
-									赞 <a href="#" class="text-primary">11</a></li>
+								<li class="d-inline ml-2" id="likeCount" th:onclick="|likeAdd(${discussPost.id}, ${loginUser.id});|" style="cursor: pointer">
+									<a id="idFlag">赞</a>
+									<a id="idCount" class="text-primary" th:text="${count}">0</a>
+								</li>
+								
 								<li class="d-inline ml-2">| 回帖</li>
 								<li class="d-inline ml-2"><a href="#replyform" class="text-primary" th:text="${discussPost.commentCount}">7</a></li>
 							</ul>
@@ -185,13 +187,36 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
 	<script th:src="@{/js/global.js}"></script>
-	<script th:src="@{js/layui.js}"></script>
+
 	<script>
 		$('#customRange').click(function (){
 			var r = $('#customRange');
 			var value = r.val();
 			$('#scoreValue').text(value + ' 分');
 		});
+
+		function likeAdd(discussPostId, userId) {
+			$.post(CONTEXT_PATH + "/like",
+				{
+					"userId":userId,
+					"discussPostId":discussPostId
+				},
+				function(data){
+					// 将data解析
+					var json = $.parseJSON(data);
+					var count = json.count;
+
+					if (json.flag){
+						$("#idFlag").text("已赞");
+					} else {
+						$("#idFlag").text("赞");
+					}
+					$("#idCount").text(count);
+				}
+			);
+		}
+
+
 	</script>
 
 </body>

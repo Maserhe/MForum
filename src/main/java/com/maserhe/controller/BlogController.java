@@ -6,6 +6,7 @@ import com.maserhe.entity.Page;
 import com.maserhe.entity.User;
 import com.maserhe.service.CommentService;
 import com.maserhe.service.DiscussPostService;
+import com.maserhe.service.RedisService;
 import com.maserhe.service.UserService;
 import com.maserhe.util.FileClient;
 import com.maserhe.util.HostHolder;
@@ -48,6 +49,8 @@ public class BlogController {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private RedisService redisService;
 
     private final Logger logger = LoggerFactory.getLogger(BlogController.class);
 
@@ -126,6 +129,11 @@ public class BlogController {
         // 判断用户是否评论过
         boolean doStar = commentService.isDoStar(hostHolder.getUser().getId(), discussPostId);
         model.addAttribute("hasStar", doStar);
+
+        // 查询是否点赞
+        long count = redisService.count(discussPostId);
+        model.addAttribute("count", count);
+
 
         return "/site/discuss-detail";
     }

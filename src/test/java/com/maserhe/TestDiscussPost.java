@@ -39,6 +39,13 @@ public class TestDiscussPost {
         discussPostService.addDiscussPost(post);
     }
 
+    @Test
+    public void Test1() {
+        int discussPostRows = discussPostService.findDiscussPostRows(0);
+        System.out.println(discussPostRows);
+
+    }
+
 
 
 }

@@ -1,6 +1,6 @@
 # MForum M论坛
 技术栈
-springboot + mybatis + thymeleaf + BootStrap + Es + fastDFS
+springboot + mybatis + thymeleaf + BootStrap + Es + fastDFS + redis
 
 论坛功能
 - 登陆
@@ -10,6 +10,7 @@ springboot + mybatis + thymeleaf + BootStrap + Es + fastDFS
 - 帖子展示，
 - 评论功能
 - 评分功能
+- 统一异常处理
+- 统一日志处理
 - 管理员功能 开发中 。。。
-- 统一异常处理 开发中 。。。 
 。。。。

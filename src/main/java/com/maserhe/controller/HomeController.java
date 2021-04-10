@@ -4,6 +4,7 @@ import com.maserhe.entity.DiscussPost;
 import com.maserhe.entity.Page;
 import com.maserhe.entity.User;
 import com.maserhe.service.DiscussPostService;
+import com.maserhe.service.RedisService;
 import com.maserhe.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,9 @@ public class HomeController {
 
     @Autowired
     private DiscussPostService discussPostService;
+
+    @Autowired
+    private RedisService redisService;
 
     /**
      * 起始页面的跳转。
@@ -63,10 +67,12 @@ public class HomeController {
             for (DiscussPost post: list) {
                 Map<String, Object> map = new HashMap<>();
                 User user = userService.findUserById(Integer.valueOf(post.getUserId()));
+                long count = redisService.count(post.getId());
                 System.out.println(user == null);
                 if (user != null ) {
                     map.put("user", user);
                     map.put("post", post);
+                    map.put("count", count);
                     discussPosts.add(map);
                 }
             }
@@ -75,6 +81,15 @@ public class HomeController {
         model.addAttribute("discussPosts", discussPosts);
         // 这里不需要 将 page 放入Model中
         return "index";
+    }
+
+    /**
+     * 500 异常
+     * @return
+     */
+    @RequestMapping(path = "/error", method = RequestMethod.GET)
+    public String getErrorPage() {
+        return "/error/500";
     }
 
 }
