@@ -134,7 +134,6 @@ public class BlogController {
         long count = redisService.count(discussPostId);
         model.addAttribute("count", count);
 
-
         return "/site/discuss-detail";
     }
 

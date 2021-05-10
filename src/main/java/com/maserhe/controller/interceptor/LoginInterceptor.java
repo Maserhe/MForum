@@ -11,6 +11,7 @@ import com.maserhe.util.HostHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -41,6 +42,9 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Autowired
     private HostHolder hostHolder;
 
+    @Value("${server.servlet.context-path}")
+    private String contentPath;
+
     /**
      * 先判断 cookie 中有没有凭证
      * @param request
@@ -61,9 +65,14 @@ public class LoginInterceptor implements HandlerInterceptor {
                 User user = userService.findUserById(loginTicket.getUserId());
                 hostHolder.setUser(user);
                 logger.info(user + "登陆成功");
+            } else {
+                response.sendRedirect(contentPath + "/site/login.html");
+                return false;
             }
+        } else {
+            response.sendRedirect(contentPath + "/site/login.html");
+            return false;
         }
-
         return true;
     }
 

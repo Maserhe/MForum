@@ -86,8 +86,15 @@ public class Test {
     @org.junit.Test
     public void TestImage() {
 
-        String text = producer.createText();
-        BufferedImage image = producer.createImage(text);
+        List<DiscussPost> allDiscussPost = discussPostMapper.getAllDiscussPost(0, 1, 1000);
+
+        for (DiscussPost t: allDiscussPost) {
+            t.setCreateTime(new Date());
+            discussPostMapper.updateDiscussPost(new Date());
+        }
+
+
+
     }
 
 }

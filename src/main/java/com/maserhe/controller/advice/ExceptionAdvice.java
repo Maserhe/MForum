@@ -33,7 +33,7 @@ public class ExceptionAdvice {
             logger.error(element.toString());
         }
         String xRequestWith = request.getHeader("x-requested-with");
-        if (xRequestWith.equals("XMLHttpRequest")) {
+        if (xRequestWith != null && xRequestWith.equals("XMLHttpRequest")) {
             response.setContentType("application/plain;charset=utf-8");
             PrintWriter writer = null;
             try {

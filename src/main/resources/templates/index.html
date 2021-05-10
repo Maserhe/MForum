@@ -27,9 +27,9 @@
 							<li class="nav-item ml-3 btn-group-vertical">
 								<a class="nav-link" th:href="@{/index.html}">首页</a>
 							</li>
-							<li class="nav-item ml-3 btn-group-vertical" th:if="${loginUser != null}">
+							<!--<li class="nav-item ml-3 btn-group-vertical" th:if="${loginUser != null}">
 								<a class="nav-link position-relative" th:href="@{/site/letter.html}">消息<span class="badge badge-danger">12</span></a>
-							</li>
+							</li>-->
 
 							<li class="nav-item ml-3 btn-group-vertical" th:if="${loginUser == null}">
 								<a class="nav-link" th:href="@{/site/register.html}">注册</a>
@@ -52,11 +52,6 @@
 								</div>
 							</li>
 						</ul>
-						<!-- 搜索 -->
-						<form class="form-inline my-2 my-lg-0" action="site/search.html">
-							<input class="form-control mr-sm-2" type="search" aria-label="Search" />
-							<button class="btn btn-outline-light my-2 my-sm-0" type="submit">搜索</button>
-						</form>
 
 					</div>
 				</nav>
@@ -68,14 +63,15 @@
 			<div class="container">
 				<div class="position-relative">
 					<!-- 筛选条件 -->
-					<ul class="nav nav-tabs mb-3">
+					<!--<ul class="nav nav-tabs mb-3">
 						<li class="nav-item">
 							<a class="nav-link active" href="#">最新</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="#">最热</a>
 						</li>
-					</ul>
+					</ul>-->
+
 					<button type="button" class="btn btn-primary btn-sm position-absolute rt-0" data-toggle="modal" data-target="#publishModal" th:if="${loginUser!=null}">我要发布</button>
 				</div>
 				<!-- 弹出框 -->
@@ -127,8 +123,8 @@
 						<div class="media-body">
 							<h6 class="mt-0 mb-3">
 								<a th:href="@{|/site/detail/${map.post.id}|}" th:utext="${map.post.title}">帖子标题</a>
-								<span class="badge badge-secondary bg-primary" th:if="${map.post.type==1}">置顶</span>
-								<span class="badge badge-secondary bg-danger" th:if="${map.post.status==1}">精华</span>
+								<!--<span class="badge badge-secondary bg-primary" th:if="${map.post.type==1}">置顶</span>
+								<span class="badge badge-secondary bg-danger" th:if="${map.post.status==1}">精华</span>-->
 							</h6>
 							<div class="text-muted font-size-12">
 								<u class="mr-3" th:utext="${map.user.username}">寒江雪</u> 发布于 <b th:utext="${#dates.format(map.post.createTime,'yyyy-MM-dd HH:mm:ss')}">2099-99-99 99:99:99</b>

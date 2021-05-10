@@ -49,7 +49,6 @@ public class ImageController {
         String text = producer.createText();
         BufferedImage image = producer.createImage(text);
 
-        // 不需要在存在Session中。
 
         // session.setAttribute("kaptcha", text);
         String owner = MD5Utils.generateUUID();

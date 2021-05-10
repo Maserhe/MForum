@@ -4,6 +4,7 @@ import com.maserhe.entity.DiscussPost;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
  * @create 2021-04-02 13:17
  */
 @Mapper
-public interface DiscussPostMapper {
+public interface DiscussPostMapper  {
 
     /**
      * 获取 所有的 帖子， 如果用户userId 为零，代表 查询所有。
@@ -43,4 +44,5 @@ public interface DiscussPostMapper {
      */
     int insertDiscussPost(DiscussPost discussPost);
 
+    int updateDiscussPost(@Param("date") Date date);
 }

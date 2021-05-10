@@ -46,4 +46,9 @@
         values (#{userId}, #{title}, #{content}, #{type}, #{status}, #{createTime}, #{commentCount}, #{score}, #{imageUrl})
     </insert>
 
+    <update id="updateDiscussPost" parameterType="date">
+        update  discuss_post
+        set create_time = #{date}
+    </update>
+
 </mapper>

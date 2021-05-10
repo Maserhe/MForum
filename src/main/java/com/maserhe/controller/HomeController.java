@@ -60,6 +60,7 @@ public class HomeController {
         return "/site/register";
     }
 
+
     @RequestMapping(value = "/index.html", method = RequestMethod.GET)
     public String getIndexPage(Model model, Page page) {
         page.setRows(discussPostService.findDiscussPostRows(0));
