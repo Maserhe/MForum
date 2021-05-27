@@ -30,6 +30,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/site/register.html")
                 .excludePathPatterns("/site/login.html")
                 .excludePathPatterns("/login")
+                .excludePathPatterns("/register")
                 .excludePathPatterns("/kaptcha");
 
     }

@@ -23,6 +23,7 @@ public interface DiscussPostMapper  {
      */
     List<DiscussPost> getAllDiscussPost(int userId, int offset, int limit);
 
+
     /**
      * 获取 帖子的 数量， 如果用户userId 为零，代表 查询所有。
      * @param userId

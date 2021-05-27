@@ -37,10 +37,12 @@ public class RegisterController implements UserStatus {
         // 进行注册
         Map<String, Object> map = userService.registerUser(user);
         model.addAllAttributes(map);
+
         if (map.containsKey("url")) {
             // 注册成功。
             model.addAttribute("registerMsg", "注册成功,请尽快激活");
         }
+
         Set<Map.Entry<String, Object>> entries = map.entrySet();
         Iterator<Map.Entry<String, Object>> iterator = entries.iterator();
 

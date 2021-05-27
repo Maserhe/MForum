@@ -97,6 +97,7 @@ public class UserService implements UserStatus{
      * @return
      */
     public Map<String, Object> registerUser(User user) {
+
         // 查询用户信息是否合法
         Map<String, Object> map = new HashMap<>();
         if (StringUtils.isBlank(user.getUsername())) {
@@ -130,19 +131,22 @@ public class UserService implements UserStatus{
         user.setSalt(salt);
         // 设置相应的密码, 通过明文密码 + salt 通过md5
         user.setPassword(MD5Utils.md5(user.getPassword() + salt));
-        user.setStatus(0);
+        // status= 1代表已经激活
+
+        user.setStatus(1);
         user.setType(0);
         user.setHeaderUrl("http://images.nowcoder.com/head/21t.png");
         user.setCreateTime(new Date());
         user.setActivationCode(MD5Utils.generateUUID().substring(0, 20));
         userMapper.insertUser(user);
+
         // 设置激活邮件
         // 配置激活链接 http://domain/contentPath/activeAccount/username/activation_code
         String url = "http://" + domain + ":"+ port + contentPath + "/activeAccount/" + user.getUsername() + "/" + user.getActivationCode();
-        map.put("url", url);
+        //map.put("url", url);
 
         // 发送邮件 String to, String username, String subject, String url
-        client.sendMailToActive(user.getEmail(), user.getUsername(), "激活邮件", url);
+        // client.sendMailToActive(user.getEmail(), user.getUsername(), "激活邮件", url);
         return map;
 
     }
