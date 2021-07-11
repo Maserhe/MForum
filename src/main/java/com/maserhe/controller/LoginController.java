@@ -55,7 +55,6 @@ public class LoginController implements LoginParam {
         }
 
         long expiredSeconds = rememberMe ? REMEMBER_EXPIRED_SECONDS: DEFAULT_EXPIRED_SECONDS;
-
         Map<String, Object> map = userService.loginUser(username, password, expiredSeconds);
 
 

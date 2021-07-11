@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -36,9 +37,19 @@ public class FileClient {
      * @return 文件访问地址
      * @throws IOException
      */
-    public String uploadFile(MultipartFile file) throws IOException {
-        StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(),
-                FilenameUtils.getExtension(file.getOriginalFilename()), null);
+    public String uploadFile(MultipartFile file)  {
+
+        StorePath storePath = null;
+        try {
+            InputStream inputStream = file.getInputStream();
+            long size = file.getSize();
+            String originalFilename = FilenameUtils.getExtension(file.getOriginalFilename());
+            storePath = storageClient.uploadFile(inputStream, size, originalFilename, null);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return fileGroup + storePath.getPath();
     }
 

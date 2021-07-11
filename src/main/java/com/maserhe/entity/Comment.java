@@ -19,13 +19,13 @@ import java.util.Date;
 @NoArgsConstructor
 public class Comment {
 
-    private int id;
+    private int id;          //主键ID
     private int userId;      // 谁的评论
     private int entityId;    // 具体是哪个帖子
-    private int targetId;    // 给指向某个人的评论
+    private int targetId;    // 给指向某个人的评论  userid
     private String content;  // 评论的内容
     private int status;      // 状态 0， 1；
     private Date createTime; //评论的时间
-    private int star;        // 打分
+    private int star;        // 打分 1 10
 
 }

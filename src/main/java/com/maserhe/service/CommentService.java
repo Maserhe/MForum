@@ -14,11 +14,13 @@ import java.util.List;
  * @author Maserhe
  * @create 2021-04-05 18:36
  */
+
 @Service
 public class CommentService {
 
     @Autowired
     private CommentMapper commentMapper;
+
 
     /**
      * 根据帖子 查询所有的评论
@@ -58,6 +60,5 @@ public class CommentService {
     public int addComment(Comment comment) {
         return commentMapper.addComment(comment);
     }
-
 
 }

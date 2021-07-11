@@ -1,6 +1,5 @@
 package com.maserhe.controller;
 
-import com.maserhe.entity.Comment;
 import com.maserhe.entity.DiscussPost;
 import com.maserhe.entity.Page;
 import com.maserhe.entity.User;

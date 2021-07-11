@@ -30,11 +30,8 @@ public class FileController {
         System.out.println(uploadImage);
 
         String s = null;
-        try {
-            s = fileClient.uploadFile(uploadImage);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        s = fileClient.uploadFile(uploadImage);
+
         System.out.println(s);
         return "redirect:/index.html";
     }

@@ -67,28 +67,27 @@ public class BlogController {
         // 过滤敏感词
         title = sensitiveFilter.filter(title);
         article = sensitiveFilter.filter(article);
-        try {
-            String path = fileClient.uploadFile(uploadImage);
-            // 获取用户
-            User user = hostHolder.getUser();
-            // 撰写博客
-            DiscussPost discussPost = new DiscussPost();
-            discussPost.setUserId(String.valueOf(user.getId()));
-            discussPost.setTitle(title);
 
-            discussPost.setScore(0);
-            discussPost.setContent(article);
-            discussPost.setType(0);
-            discussPost.setCommentCount(0);
-            discussPost.setStatus(0);
-            discussPost.setImageUrl(path);
-            discussPost.setCreateTime(new Date());
+        String path = fileClient.uploadFile(uploadImage);
+        // 获取用户
+        User user = hostHolder.getUser();
+        // 撰写博客
+        DiscussPost discussPost = new DiscussPost();
+        discussPost.setUserId(String.valueOf(user.getId()));
 
-            discussPostService.addDiscussPost(discussPost);
+        discussPost.setTitle(title);
 
-        } catch (IOException e) {
-            logger.error("文件上传出项错误");
-        }
+        discussPost.setScore(0);
+        discussPost.setContent(article);
+        discussPost.setType(0);
+        discussPost.setCommentCount(0);
+        discussPost.setStatus(0);
+        discussPost.setImageUrl(path);
+        discussPost.setCreateTime(new Date());
+
+        discussPostService.addDiscussPost(discussPost);
+
+
         return "redirect:/index.html";
     }
 
